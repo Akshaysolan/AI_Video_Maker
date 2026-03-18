@@ -58,4 +58,3 @@ node_modules/
 .streamlit/secrets.toml
 .streamlit/secrets.toml.template
 
-.streamlit/
