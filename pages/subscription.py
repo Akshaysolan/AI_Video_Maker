@@ -134,3 +134,4 @@ def _upgrade_user(new_plan):
     st.success(f"🎉 You're now on the {new_plan.upper()} plan! Enjoy unlimited video generation.")
     st.balloons()
     st.rerun()
+    

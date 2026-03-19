@@ -62,13 +62,27 @@ def login(email, password):
     st.session_state.user = {"name": user["name"], "email": user["email"]}
     st.session_state.plan = user.get("plan", "free")
     st.session_state.videos_generated = user.get("videos_generated", 0)
-    st.session_state.video_history = user.get("video_history", [])
+    
+    # Load full video history including results
+    video_history = user.get("video_history", [])
+    # Ensure each video has a results field (for backward compatibility)
+    for video in video_history:
+        if "results" not in video:
+            video["results"] = {}  # Empty results for old videos
+    
+    st.session_state.video_history = video_history
     return True, "Logged in!"
 
 def update_user_in_db(email, updates):
     users = load_users()
     if email in users:
+        # Merge updates with existing user data
         users[email].update(updates)
+        
+        # Ensure video_history is stored properly
+        if "video_history" in updates:
+            users[email]["video_history"] = updates["video_history"]
+        
         save_users(users)
 
 def render_auth_page():
@@ -156,7 +170,7 @@ def _create_demo_user():
                 {
                     "id": "v001", "title": "Product Launch Video", "duration": "2:30",
                     "status": "done", "created": "2024-01-10", "topic": "Tech startup product launch",
-                    "results": {
+                    "results": {  # Include results
                         "script": {
                             "title": "Product Launch Video",
                             "hook": "What if your next product launch could reach 10x more people?",
@@ -180,7 +194,7 @@ def _create_demo_user():
                 {
                     "id": "v002", "title": "Travel Vlog Intro", "duration": "1:45",
                     "status": "done", "created": "2024-01-09", "topic": "Summer travel adventures",
-                    "results": {
+                    "results": {  # Include results
                         "script": {
                             "title": "Travel Vlog Intro",
                             "hook": "This summer I traveled to 5 countries in 30 days. Here is what I learned.",
@@ -205,3 +219,5 @@ def _create_demo_user():
             "created_at": "2024-01-01T00:00:00"
         }
         save_users(users)
+        
+        

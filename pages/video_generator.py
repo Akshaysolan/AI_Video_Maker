@@ -19,6 +19,7 @@ def render_video_generator():
     <div class="page-sub">Describe your idea — our AI agents will build the complete video package.</div>
     """, unsafe_allow_html=True)
 
+    
     # Quota check
     if plan == "free" and videos_used >= max_free:
         st.markdown("""
@@ -246,18 +247,31 @@ def _save_video(results, topic, duration):
         "status": "done",
         "created": datetime.now().strftime("%Y-%m-%d"),
         "topic": topic[:100],
-        "results": results
+        "results": results  # Keep full results in session state
     }
 
+    # Update session state
     history = st.session_state.get("video_history", [])
     history.append(video_entry)
     st.session_state.video_history = history
     st.session_state.videos_generated = st.session_state.get("videos_generated", 0) + 1
 
+    # Save to database - include results in the stored data
     email = st.session_state.user["email"]
+    
+    # Create a copy of history for database with results included
+    db_history = []
+    for vid in history:
+        # Deep copy to avoid modifying session state
+        vid_copy = vid.copy()
+        if "results" in vid_copy:
+            # Keep results in database too
+            vid_copy["results"] = vid_copy["results"]
+        db_history.append(vid_copy)
+    
     update_user_in_db(email, {
         "videos_generated": st.session_state.videos_generated,
-        "video_history": [{k: v for k, v in vid.items() if k != "results"} for vid in history]
+        "video_history": db_history  # Store full history with results
     })
 
 

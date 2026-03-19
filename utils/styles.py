@@ -238,5 +238,47 @@ def inject_styles():
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: var(--bg); }
     ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    
+    /* Previous styles remain... */
+    
+    /* Image hover effects */
+    .image-hover {
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .image-hover:hover {
+        transform: scale(1.02);
+        box-shadow: 0 10px 30px rgba(255,107,53,0.3);
+    }
+    
+    /* Colorful badges */
+    .color-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        margin: 2px;
+        transition: transform 0.2s;
+    }
+    .color-badge:hover {
+        transform: translateY(-2px);
+    }
+    
+    /* Animated gradient borders */
+    @keyframes borderGlow {
+        0% { border-color: #ff6b6b; }
+        25% { border-color: #4ecdc4; }
+        50% { border-color: #45b7d1; }
+        75% { border-color: #96ceb4; }
+        100% { border-color: #ff6b6b; }
+    }
+    .gradient-border {
+        border: 2px solid;
+        animation: borderGlow 4s linear infinite;
+    }
     </style>
     """, unsafe_allow_html=True)
+    
+    
+
+
