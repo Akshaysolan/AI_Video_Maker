@@ -16,6 +16,17 @@ from pages.subscription import render_subscription
 inject_styles()
 init_session()
 
+st.set_page_config(layout="wide")
+
+st.markdown("""
+<style>
+[data-testid="stSidebarNav"] {
+    display: none;
+}
+</style>
+""", unsafe_allow_html=True)
+
+
 # Sidebar navigation
 with st.sidebar:
     st.markdown("""
